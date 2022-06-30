@@ -1,19 +1,27 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Intents } = require('discord.js');
-const { token } = require('./config.json');
+const { token, prefix } = require('./config.json');
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
 client.commands = new Collection();
-const commandsPath = path.join(__dirname, 'commands');
-const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+const slashcmdPath = path.join(__dirname, 'commands/slash');
+const slashcmdFiles = fs.readdirSync('./commands/slash').filter(file => file.endsWith('.js'));
 
-for (const file of commandFiles) {
-	const filePath = path.join(commandsPath, file);
+for (const file of slashcmdFiles) {
+	const filePath = path.join(slashcmdPath, file);
 	const command = require(filePath);
 	client.commands.set(command.data.name, command);
 }
+
+const msgcmdFiles = fs.readdirSync('./commands/message').filter(file => file.endsWith('.js'));
+
+for (const file of msgcmdFiles) {
+	const command = require(`./commands/message/${file}`);
+	client.commands.set(command.name, command);
+}
+
 const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
 
@@ -27,7 +35,6 @@ for (const file of eventFiles) {
 	}
 }
 client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) return;
 
 	const command = client.commands.get(interaction.commandName);
 
@@ -38,6 +45,22 @@ client.on('interactionCreate', async interaction => {
 	} catch (error) {
 		console.error(error);
 		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+	}
+});
+
+client.on('messageCreate', message => {
+	if (!message.content.startsWith(prefix) || message.author.bot) return;
+
+	const args = message.content.slice(prefix.length).trim().split(/ +/);
+	const command = args.shift().toLowerCase();
+
+	if (!client.commands.has(command)) return;
+
+	try {
+		client.commands.get(command).execute(message, args);
+	} catch (error) {
+		console.error(error);
+		message.reply('there was an error trying to execute that command!');
 	}
 });
 
