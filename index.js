@@ -1,9 +1,22 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Collection, Intents } = require('discord.js');
+const { Client, Collection, GatewayIntentBits, Partials } = require('discord.js');
 const { token, prefix } = require('./config.json');
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const client = new Client(
+	{ intents: [
+			GatewayIntentBits.Guilds,
+			GatewayIntentBits.GuildMessages,
+			GatewayIntentBits.MessageContent
+		],
+	partials: [
+		Partials.Channel,
+		Partials.Message,
+		Partials.User,
+		Partials.GuildMember,
+		Partials.Reaction]
+	}
+	);
 
 client.commands = new Collection();
 const slashcmdPath = path.join(__dirname, 'commands/slash');
