@@ -1,7 +1,7 @@
 const { prefix } = require('./config.json');
 module.exports = {
 	name: 'messageCreate',
-	execute(message, client) {
+	async execute(message, client) {
         if (!message.content.startsWith(prefix) || message.author.bot) return;
         const args = message.content.slice(prefix.length).trim().split(/ +/);
         const command = args.shift().toLowerCase();
