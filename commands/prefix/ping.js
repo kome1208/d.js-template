@@ -1,7 +1,7 @@
 module.exports = {
-	name: 'ping',
-	description: 'Ping!',
+	name: 'ping',　//コマンド名
+	description: 'Ping!', //コマンドの説明
 	execute(message) {
-		message.channel.send('Pong.');
+		message.channel.send('Pong.'); //コマンドが送られたチャンネルに「Pong.」を送信
 	},
 };
