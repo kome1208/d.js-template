@@ -1,7 +1,34 @@
 {
   "dependencies": {
-    "@discordjs/rest": "^0.5.0",
-    "discord-api-types": "^0.37.1",
-    "discord.js": "^14.1.2"
-  }
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3"
+  },
+  "name": "d.js-template",
+  "description": "Templates for Discord.js",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "register": "node ./deploy.js",
+    "start": "node ./index.js"
+  },
+  "engines": {
+    "node": ">=16.9"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kome1208/d.js-template.git"
+  },
+  "keywords": [
+    "discord.js",
+    "d.js",
+    "discord",
+    "bot",
+    "template"
+  ],
+  "author": "kome1",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kome1208/d.js-template/issues"
+  },
+  "homepage": "https://github.com/kome1208/d.js-template#readme"
 }
